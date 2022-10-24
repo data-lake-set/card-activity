@@ -1,15 +1,18 @@
+import { ClipLoader } from 'react-spinners';
 import { GradientButtonWithIcon } from '../../button/gradient/GradientButtonWithIcon';
 import { IVestingSchedule } from '../../../interfaces/vestingSchedule.interface';
 import { ScheduleTab } from './ScheduleTab';
 import { WalletConnectContext } from '../../../context';
+import { colors } from '../../../constants/colors';
 import keyIcon from './../../../assets/icons/key-icon.svg';
 import { useContext } from 'react';
 
 interface Props {
     data: IVestingSchedule[];
+    isLoading: boolean;
 }
 
-export const VestingSchedule = ({ data }: Props) => {
+export const VestingSchedule = ({ data, isLoading }: Props) => {
     const { account, activateProvider } = useContext(WalletConnectContext);
 
     const activate = async () => {
@@ -28,7 +31,13 @@ export const VestingSchedule = ({ data }: Props) => {
                     </div>
                 </div>
                 <div className="w-full flex flex-col items-center justify-center">
-                    <ScheduleTab data={data} />
+                    {isLoading ? (
+                        <div className="my-24">
+                            <ClipLoader color={colors.gray['300']} loading />
+                        </div>
+                    ) : (
+                        <ScheduleTab data={data} />
+                    )}
                 </div>
             </div>
             {!account && (

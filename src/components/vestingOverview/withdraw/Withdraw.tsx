@@ -1,7 +1,9 @@
 import { useContext, useEffect, useState } from 'react';
 
+import { ClipLoader } from 'react-spinners';
 import { GradientButton } from '../../button/gradient/GradientButton';
 import { GradientButtonWithIcon } from '../../button/gradient/GradientButtonWithIcon';
+import { GradientButtonWithSpinner } from '../../button/gradient/GradientButtonWithSpinner';
 import { IVestingSchedule } from '../../../interfaces/vestingSchedule.interface';
 import { WalletConnectContext } from '../../../context';
 import { colors } from '../../../constants/colors';
@@ -12,11 +14,13 @@ import { useTokenClaim } from '../../../hooks/use-token-claim';
 
 interface Props {
     data: IVestingSchedule[];
+    isLoading: boolean;
 }
 
-export const Withdraw = ({ data }: Props) => {
+export const Withdraw = ({ data, isLoading }: Props) => {
     const { library, account, activateProvider } =
         useContext(WalletConnectContext);
+    const [isClaiming, setIsClaiming] = useState(false);
     const [totalLocked, setTotalLocked] = useState(0);
     const [totalUnlocked, setTotalUnlocked] = useState(0);
     const [totalWithdrawn, setTotalWithdrawn] = useState(0);
@@ -36,9 +40,11 @@ export const Withdraw = ({ data }: Props) => {
     }, [data]);
 
     const onWithdrawClick = async () => {
+        setIsClaiming(true);
         if (library) {
             await claimAllTokens(library);
         }
+        setIsClaiming(false);
     };
 
     const activate = async () => {
@@ -55,57 +61,77 @@ export const Withdraw = ({ data }: Props) => {
                 <div className="w-full flex justify-center font-kanit-medium color-gray-gradient text-shadow text-lg tracking-[.12em]">
                     WITHDRAW
                 </div>
-                <div className="w-full flex flex-col items-center my-6">
-                    <div className="flex flex-col text-gray-600">
-                        <div>
-                            <span className="text-4xl tracking-[.1em]">
-                                {Math.trunc(totalLocked)}
-                            </span>
-                            <span className="tracking-[.1em]">
-                                {Math.abs(totalLocked - Math.trunc(totalLocked))
-                                    .toFixed(2)
-                                    .slice(1)}
-                            </span>
-                        </div>
-                        <span className="text-sm tracking-[.1em] mt-1">
-                            TOTAL LOCKED
-                        </span>
+                {isLoading ? (
+                    <div className="mt-20 mb-36">
+                        <ClipLoader color={colors.gray['300']} loading />
                     </div>
-                    <Line />
-                    <div className="flex items-center justify-center">
-                        <img
-                            className="w-[3rem] h-[3rem] mr-2"
-                            src={logo}
-                            alt="logo"
-                        ></img>
-                        <div className="flex flex-col">
-                            <div>
-                                <span className="text-4xl tracking-[.1em] color-gradient">
-                                    {Math.trunc(totalUnlocked)}
-                                </span>
-                                <span className="tracking-[.1em] color-gradient">
-                                    {Math.abs(
-                                        totalUnlocked -
-                                            Math.trunc(totalUnlocked),
-                                    )
-                                        .toFixed(2)
-                                        .slice(1)}
+                ) : (
+                    <>
+                        <div className="w-full flex flex-col items-center my-6">
+                            <div className="flex flex-col text-gray-600">
+                                <div>
+                                    <span className="text-4xl tracking-[.1em]">
+                                        {Math.trunc(totalLocked)}
+                                    </span>
+                                    <span className="tracking-[.1em]">
+                                        {Math.abs(
+                                            totalLocked -
+                                                Math.trunc(totalLocked),
+                                        )
+                                            .toFixed(2)
+                                            .slice(1)}
+                                    </span>
+                                </div>
+                                <span className="text-sm tracking-[.1em] mt-1">
+                                    TOTAL LOCKED
                                 </span>
                             </div>
-                            <span className="text-sm tracking-[.1em] text-gray-600">
-                                TOTAL UNLOCKED
-                            </span>
+                            <Line />
+                            <div className="flex items-center justify-center">
+                                <img
+                                    className="w-[3rem] h-[3rem] mr-2"
+                                    src={logo}
+                                    alt="logo"
+                                ></img>
+                                <div className="flex flex-col">
+                                    <div>
+                                        <span className="text-4xl tracking-[.1em] color-gradient">
+                                            {Math.trunc(totalUnlocked)}
+                                        </span>
+                                        <span className="tracking-[.1em] color-gradient">
+                                            {Math.abs(
+                                                totalUnlocked -
+                                                    Math.trunc(totalUnlocked),
+                                            )
+                                                .toFixed(2)
+                                                .slice(1)}
+                                        </span>
+                                    </div>
+                                    <span className="text-sm tracking-[.1em] text-gray-600">
+                                        TOTAL UNLOCKED
+                                    </span>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                <div className="w-full flex flex-col items-center justify-center my-6">
-                    <GradientButton
-                        size="small"
-                        disabled={false}
-                        text={`WITHDRAW ${totalUnlocked - totalWithdrawn} LAKE`}
-                        onClick={onWithdrawClick}
-                    />
-                </div>
+                        <div className="w-full flex flex-col items-center justify-center my-6">
+                            {isClaiming ? (
+                                <GradientButtonWithSpinner
+                                    size="small"
+                                    disabled={true}
+                                />
+                            ) : (
+                                <GradientButton
+                                    size="small"
+                                    disabled={false}
+                                    text={`WITHDRAW ${
+                                        totalUnlocked - totalWithdrawn
+                                    } LAKE`}
+                                    onClick={onWithdrawClick}
+                                />
+                            )}
+                        </div>
+                    </>
+                )}
             </div>
             {!account && (
                 <div className="absolute top-[50%] left-[6%]">
