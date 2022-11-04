@@ -6,13 +6,21 @@ import usdtLogo from './../../../assets/icons/usdt-logo.svg';
 
 type Props = {
     tokenSymbol: string;
-    tokenAmount: number;
     tokenPrice: number;
+    inputValue: number;
+    setMaxInputValue: () => void;
+    onChange: (event: any) => void;
 };
 
-export const TokenInput = ({ tokenSymbol, tokenAmount, tokenPrice }: Props) => {
+export const TokenInput = ({
+    tokenSymbol,
+    tokenPrice,
+    inputValue,
+    setMaxInputValue,
+    onChange,
+}: Props) => {
     const onMaxClick = () => {
-        console.log('max');
+        setMaxInputValue();
     };
     return (
         <InputContainer className="w-full h-[7rem] flex justify-between pl-8 pr-2 pt-2 my-4">
@@ -34,11 +42,19 @@ export const TokenInput = ({ tokenSymbol, tokenAmount, tokenPrice }: Props) => {
                     <span>MAX</span>
                 </button>
                 <div className="flex flex-col items-center mt-2 mr-4">
-                    <span className="font-kanit-medium color-gradient text-2xl font-bold whitespace-nowrap">
-                        {formatValue(tokenAmount, tokenSymbol, 0)}
-                    </span>
+                    <div className="flex items-center">
+                        <input
+                            className="font-kanit-medium color-gradient text-2xl font-bold truncate text-end w-[7rem] mr-2"
+                            value={inputValue}
+                            onChange={onChange}
+                        />
+                        <span className="font-kanit-medium color-gradient text-2xl font-bold">
+                            {tokenSymbol}
+                        </span>
+                    </div>
+
                     <span className="font-kanit-medium whitespace-nowrap text-xs tracking-[.12em]">
-                        = {formatValue(tokenAmount * tokenPrice, '$', 0)}
+                        = {formatValue(inputValue * tokenPrice, '$', 0)}
                     </span>
                 </div>
             </div>

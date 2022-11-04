@@ -42,6 +42,8 @@ export const ProvideLiquidityModal = ({ isOpen, closeModal }: Props) => {
     const { usdtAddress, lakeAddress } = useConfig();
     const [usdtBalance, setUsdtBalance] = useState(0);
     const [lakeBalance, setLakeBalance] = useState(0);
+    const [usdtInputValue, setUsdtInputValue] = useState(0);
+    const [lakeInputValue, setLakeInputValue] = useState(0);
     const usdtBalanceAsBigNumber = useTokenBalance(usdtAddress, account);
     const lakeBalanceAsBigNumber = useTokenBalance(lakeAddress, account);
     const { getLakePrice } = useUniswap();
@@ -77,6 +79,15 @@ export const ProvideLiquidityModal = ({ isOpen, closeModal }: Props) => {
                 : 0,
         );
     };
+
+    const onUsdtValueChange = (event: any) => {
+        setUsdtInputValue(event.target.value);
+    };
+
+    const onLakeValueChange = (event: any) => {
+        setLakeInputValue(event.target.value);
+    };
+
     const onApproveClick = () => {
         console.log('approve');
     };
@@ -110,13 +121,21 @@ export const ProvideLiquidityModal = ({ isOpen, closeModal }: Props) => {
                     <div className="flex flex-col min-w-[20vw]">
                         <TokenInput
                             tokenSymbol="USDT"
-                            tokenAmount={usdtBalance}
                             tokenPrice={usdtPrice}
+                            inputValue={usdtInputValue}
+                            setMaxInputValue={() =>
+                                setUsdtInputValue(usdtBalance)
+                            }
+                            onChange={onUsdtValueChange}
                         />
                         <TokenInput
                             tokenSymbol="LAKE"
-                            tokenAmount={lakeBalance}
                             tokenPrice={lakePrice}
+                            inputValue={lakeInputValue}
+                            setMaxInputValue={() =>
+                                setLakeInputValue(lakeBalance)
+                            }
+                            onChange={onLakeValueChange}
                         />
                     </div>
                     <div className="flex flex-col mt-8 items-center">
