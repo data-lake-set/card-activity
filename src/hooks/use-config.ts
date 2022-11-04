@@ -26,8 +26,8 @@ export const useConfig = () => {
         lakeAddress: process.env.REACT_APP_LAKE_ADDRESS || '',
         vestingScheduleAddress:
             process.env.REACT_APP_VESTING_SCHEDULE_ADDRESS || '',
-        usdcLakePoolAddress: process.env.REACT_APP_USDC_LAKE_POOL_ADDRESS || '',
-        usdcAddress: process.env.REACT_APP_USDC_ADDRESS || '',
+        usdtLakePoolAddress: process.env.REACT_APP_USDT_LAKE_POOL_ADDRESS || '',
+        usdtAddress: process.env.REACT_APP_USDT_ADDRESS || '',
         etherscanBaseURL: `https://api${
             chain === 'goerli' ? '-goerli' : ''
         }.etherscan.io/api`,
@@ -38,7 +38,7 @@ export const useConfig = () => {
                 : Number(process.env.REACT_APP_SWAP_CONVENIENCE_FEE)),
         swapConvenienceFeeRecipient:
             process.env.REACT_APP_SWAP_CONVENIENCE_FEE_RECIPIENT || '',
-
+        lpTokenAddress: process.env.REACT_APP_LP_TOKEN_ADDRESS || '',
         getDappConfig,
     };
 };

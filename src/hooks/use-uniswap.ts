@@ -23,7 +23,7 @@ export const useUniswap = () => {
 
     const getLakePrice = async (provider: JsonRpcProvider): Promise<number> => {
         const poolContract = new Contract(
-            usdcLakePoolAddress,
+            usdtLakePoolAddress,
             uniswapV3PoolAbi,
             provider,
         );

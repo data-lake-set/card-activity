@@ -8,6 +8,7 @@ type Props = {
     tokenSymbol: string;
     tokenPrice: number;
     inputValue: number;
+    isValueValid: boolean;
     setMaxInputValue: () => void;
     onChange: (event: any) => void;
 };
@@ -16,6 +17,7 @@ export const TokenInput = ({
     tokenSymbol,
     tokenPrice,
     inputValue,
+    isValueValid,
     setMaxInputValue,
     onChange,
 }: Props) => {
@@ -53,7 +55,11 @@ export const TokenInput = ({
                         </span>
                     </div>
 
-                    <span className="font-kanit-medium whitespace-nowrap text-xs tracking-[.12em]">
+                    <span
+                        className={`font-kanit-medium whitespace-nowrap text-xs tracking-[.12em] ${
+                            !isValueValid && 'text-red-600'
+                        }`}
+                    >
                         = {formatValue(inputValue * tokenPrice, '$', 0)}
                     </span>
                 </div>

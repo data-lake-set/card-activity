@@ -44,6 +44,8 @@ export const ProvideLiquidityModal = ({ isOpen, closeModal }: Props) => {
     const [lakeBalance, setLakeBalance] = useState(0);
     const [usdtInputValue, setUsdtInputValue] = useState(0);
     const [lakeInputValue, setLakeInputValue] = useState(0);
+    const [isUsdtValueValid, setIsUsdtValueValid] = useState(true);
+    const [isLakeValueValid, setIsLakeValueValid] = useState(true);
     const usdtBalanceAsBigNumber = useTokenBalance(usdtAddress, account);
     const lakeBalanceAsBigNumber = useTokenBalance(lakeAddress, account);
     const { getLakePrice } = useUniswap();
@@ -61,7 +63,7 @@ export const ProvideLiquidityModal = ({ isOpen, closeModal }: Props) => {
                 fetchData(library).catch(console.error);
             }, REFRESH_LAKE_PRICE_INTERVAL);
         }
-    }, []);
+    }, [library]);
 
     useEffect(() => {
         setBalances();
@@ -82,12 +84,18 @@ export const ProvideLiquidityModal = ({ isOpen, closeModal }: Props) => {
 
     const onUsdtValueChange = (value: number) => {
         setUsdtInputValue(value);
-        setLakeInputValue((value * usdtPrice) / lakePrice);
+        setIsUsdtValueValid(value <= usdtBalance);
+        const lakeAmount = (value * usdtPrice) / lakePrice;
+        setLakeInputValue(lakeAmount);
+        setIsLakeValueValid(lakeAmount <= lakeBalance);
     };
 
     const onLakeValueChange = (value: number) => {
         setLakeInputValue(value);
-        setUsdtInputValue((value * lakePrice) / usdtPrice);
+        setIsLakeValueValid(value <= lakeBalance);
+        const usdtAmount = (value * lakePrice) / usdtPrice;
+        setUsdtInputValue(usdtAmount);
+        setIsUsdtValueValid(usdtAmount <= usdtBalance);
     };
 
     const onApproveClick = () => {
@@ -125,22 +133,24 @@ export const ProvideLiquidityModal = ({ isOpen, closeModal }: Props) => {
                             tokenSymbol="USDT"
                             tokenPrice={usdtPrice}
                             inputValue={usdtInputValue}
+                            isValueValid={isUsdtValueValid}
                             setMaxInputValue={() =>
                                 onUsdtValueChange(usdtBalance)
                             }
                             onChange={(event: any) =>
-                                onUsdtValueChange(event.target.value)
+                                onUsdtValueChange(event.target.value || 0)
                             }
                         />
                         <TokenInput
                             tokenSymbol="LAKE"
                             tokenPrice={lakePrice}
                             inputValue={lakeInputValue}
+                            isValueValid={isLakeValueValid}
                             setMaxInputValue={() =>
                                 onLakeValueChange(lakeBalance)
                             }
                             onChange={(event: any) =>
-                                onLakeValueChange(event.target.value)
+                                onLakeValueChange(event.target.value || 0)
                             }
                         />
                     </div>
