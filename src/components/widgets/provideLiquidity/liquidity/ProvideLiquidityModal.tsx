@@ -151,7 +151,7 @@ export const ProvideLiquidityModal = ({
 
     useEffect(() => {
         setSelectedPosition(undefined);
-        setStep(1);
+        setStep(positions.length > 0 ? 1 : 2);
     }, [positions]);
 
     useEffect(() => {

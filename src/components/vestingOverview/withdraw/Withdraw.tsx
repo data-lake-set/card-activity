@@ -54,20 +54,24 @@ export const Withdraw = ({ data, isLoading, refresh }: Props) => {
             const tx = await useClaimTokensTransaction(
                 library.getSigner(account),
             );
-            setTransactionHash(tx.hash);
-            const receipt = await tx.wait();
+            if (tx) {
+                setTransactionHash(tx.hash);
+                const receipt = await tx.wait();
+                setTransactionStatus(
+                    receipt.status === 1 ? 'SUCCESSFUL' : 'FAILED',
+                );
+                setTimeout(
+                    () => {
+                        setTransactionStatus(undefined);
+                    },
+                    receipt.status === 1
+                        ? SUCCESSFUL_TRANSACTION_DELAY
+                        : FAILED_TRANSACTION_DELAY,
+                );
+            } else {
+                setTransactionStatus(undefined);
+            }
             setIsClaiming(false);
-            setTransactionStatus(
-                receipt.status === 1 ? 'SUCCESSFUL' : 'FAILED',
-            );
-            setTimeout(
-                () => {
-                    setTransactionStatus(undefined);
-                },
-                receipt.status === 1
-                    ? SUCCESSFUL_TRANSACTION_DELAY
-                    : FAILED_TRANSACTION_DELAY,
-            );
             refresh();
         }
     };

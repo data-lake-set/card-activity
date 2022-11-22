@@ -4,27 +4,22 @@ import { JsonRpcProvider } from '@ethersproject/providers';
 import { useConfig } from './use-config';
 import { vestingScheduleAbi } from '../abis/vestingSchedule';
 
-export const useBeneficiaryOverview = () => {
+export const useBeneficiaryOverview = async (
+    provider: JsonRpcProvider,
+    account: string,
+): Promise<IBeneficiaryOverview[]> => {
     const { vestingScheduleAddress } = useConfig();
-    const getBeneficiaryOverview = async (
-        provider: JsonRpcProvider,
-        account: string,
-    ): Promise<IBeneficiaryOverview[]> => {
-        const vestingScheduleContract = new Contract(
-            vestingScheduleAddress,
-            vestingScheduleAbi,
-            provider,
+    const vestingScheduleContract = new Contract(
+        vestingScheduleAddress,
+        vestingScheduleAbi,
+        provider,
+    );
+    try {
+        return await vestingScheduleContract.callStatic.getBeneficiaryOverview(
+            account,
         );
-        try {
-            return await vestingScheduleContract.callStatic.getBeneficiaryOverview(
-                account,
-            );
-        } catch (e) {
-            return [];
-        }
-    };
-
-    return {
-        getBeneficiaryOverview,
-    };
+    } catch (e) {
+        console.error('Failed to get beneficiary overview: ', e);
+        return [];
+    }
 };

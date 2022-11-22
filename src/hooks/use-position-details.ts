@@ -21,7 +21,6 @@ export const usePositionDetails = async (
             tickLower: position.tickLower,
             tickUpper: position.tickUpper,
         });
-
         return {
             positionId,
             liquidity: posDetails.liquidity,
@@ -47,6 +46,6 @@ export const usePositionDetails = async (
             lakeAmount: Number(posDetails.amount1.toSignificant(4)),
         };
     } catch (e) {
-        console.error('Failed to get position details', e);
+        console.error('Failed to get position details: ', e);
     }
 };

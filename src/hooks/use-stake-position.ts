@@ -18,7 +18,6 @@ export const useStakePosition = async (
         const tx = await stakingContract.stake(positionId);
         return await tx.wait();
     } catch (e) {
-        console.error('Failed to stake position', e);
+        console.error('Failed to stake position: ', e);
     }
-    return;
 };

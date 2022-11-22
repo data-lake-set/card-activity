@@ -27,6 +27,9 @@ export const useConfig = () => {
         vestingScheduleAddress:
             process.env.REACT_APP_VESTING_SCHEDULE_ADDRESS || '',
         usdtLakePoolAddress: process.env.REACT_APP_USDT_LAKE_POOL_ADDRESS || '',
+        poolDeploymentBlockNumber: Number(
+            process.env.REACT_APP_POOL_DEPLOYMENT_BLOCK_NUMBER,
+        ),
         usdtAddress: process.env.REACT_APP_USDT_ADDRESS || '',
         etherscanBaseURL: `https://api${
             chain === 'goerli' ? '-goerli' : ''

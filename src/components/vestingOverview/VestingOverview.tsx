@@ -17,16 +17,14 @@ export const VestingOverview = () => {
     >([]);
     const [isLoading, setIsLoading] = useState(true);
     const [refresh, setRefresh] = useState(0);
-    const { getBeneficiaryOverview } = useBeneficiaryOverview();
-    const { getTgeTimestamp } = useTgeTimestamp();
 
     useEffect(() => {
         const fetchData = async (library: JsonRpcProvider, account: string) => {
-            const beneficiaryOverview = await getBeneficiaryOverview(
+            const beneficiaryOverview = await useBeneficiaryOverview(
                 library,
                 account,
             );
-            const tgeTimestamp = await getTgeTimestamp(library);
+            const tgeTimestamp = await useTgeTimestamp(library);
 
             const vestingSchedules = beneficiaryOverview.map(
                 (el: IBeneficiaryOverview) =>

@@ -18,7 +18,6 @@ export const useUnstakePosition = async (
         const tx = await stakingContract.withdraw(positionId);
         return await tx.wait();
     } catch (e) {
-        console.error('Failed to unstake position', e);
+        console.error('Failed to unstake position: ', e);
     }
-    return;
 };

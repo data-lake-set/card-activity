@@ -23,6 +23,6 @@ export const usePositionDetailsById = async (
             return await usePositionDetails(provider, positionId, position);
         }
     } catch (e) {
-        console.error('Failed to get position details by id', e);
+        console.error('Failed to get position details by id: ', e);
     }
 };

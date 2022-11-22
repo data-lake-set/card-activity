@@ -33,7 +33,7 @@ export const usePositions = async (
             }
         }
     } catch (e) {
-        console.error('Failed to get position details', e);
+        console.error('Failed to get positions: ', e);
     }
     return positions;
 };

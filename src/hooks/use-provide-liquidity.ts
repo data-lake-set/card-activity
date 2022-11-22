@@ -73,6 +73,6 @@ export const useProvideLiquidity = async (
         const resp = await provider.getSigner().sendTransaction(newTxn);
         await resp.wait();
     } catch (e) {
-        console.error('Failed to provide liquidity', e);
+        console.error('Failed to provide liquidity: ', e);
     }
 };

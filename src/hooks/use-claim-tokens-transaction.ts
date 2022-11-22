@@ -6,13 +6,16 @@ import { vestingScheduleAbi } from '../abis/vestingSchedule';
 
 export const useClaimTokensTransaction = async (
     signer: JsonRpcSigner,
-): Promise<ContractTransaction> => {
+): Promise<ContractTransaction | undefined> => {
     const { vestingScheduleAddress } = useConfig();
     const vestingScheduleContract = new Contract(
         vestingScheduleAddress,
         vestingScheduleAbi,
         signer,
     );
-
-    return await vestingScheduleContract.claimAllTokens();
+    try {
+        return await vestingScheduleContract.claimAllTokens();
+    } catch (e) {
+        console.error('Failed to claim tokens: ', e);
+    }
 };

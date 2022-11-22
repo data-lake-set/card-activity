@@ -66,6 +66,6 @@ export const useRemoveLiquidity = async (
         const resp = await provider.getSigner().sendTransaction(newTxn);
         await resp.wait();
     } catch (e) {
-        console.error('Failed to remove liquidity', e);
+        console.error('Failed to remove liquidity: ', e);
     }
 };

@@ -37,8 +37,6 @@ export const AccountOverview = () => {
     const [vestingSchedules, setVestingSchedules] = useState<
         IVestingSchedule[]
     >([]);
-    const { getBeneficiaryOverview } = useBeneficiaryOverview();
-    const { getTgeTimestamp } = useTgeTimestamp();
     const lakeBalanceAsBigNumber = useTokenBalance(lakeAddress, account);
 
     useEffect(() => {
@@ -74,11 +72,11 @@ export const AccountOverview = () => {
 
     useEffect(() => {
         const fetchData = async (library: JsonRpcProvider, account: string) => {
-            const beneficiaryOverview = await getBeneficiaryOverview(
+            const beneficiaryOverview = await useBeneficiaryOverview(
                 library,
                 account,
             );
-            const tgeTimestamp = await getTgeTimestamp(library);
+            const tgeTimestamp = await useTgeTimestamp(library);
 
             const vestingSchedules = beneficiaryOverview.map(
                 (el: IBeneficiaryOverview) =>

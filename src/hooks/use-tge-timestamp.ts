@@ -4,11 +4,11 @@ import { parseBigNumber } from '../utils/parseBigNumber';
 import { useConfig } from './use-config';
 import { vestingScheduleAbi } from '../abis/vestingSchedule';
 
-export const useTgeTimestamp = () => {
-    const { vestingScheduleAddress } = useConfig();
-    const getTgeTimestamp = async (
-        provider: JsonRpcProvider,
-    ): Promise<number> => {
+export const useTgeTimestamp = async (
+    provider: JsonRpcProvider,
+): Promise<number> => {
+    try {
+        const { vestingScheduleAddress } = useConfig();
         const vestingScheduleContract = new Contract(
             vestingScheduleAddress,
             vestingScheduleAbi,
@@ -17,9 +17,8 @@ export const useTgeTimestamp = () => {
         const tgeTimestampAsBigNumber =
             await vestingScheduleContract.callStatic.tgeTimestamp();
         return parseBigNumber(tgeTimestampAsBigNumber, 0);
-    };
-
-    return {
-        getTgeTimestamp,
-    };
+    } catch (e) {
+        console.error('Failed to get TGE timestamp: ', e);
+        return 0;
+    }
 };

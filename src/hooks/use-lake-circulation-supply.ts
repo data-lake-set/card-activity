@@ -12,21 +12,32 @@ export const useLakeCirculationSupply = async (
     const { lakeAddress, vestingScheduleAddress, usdtLakePoolAddress } =
         useConfig();
     const lakeTokenContract = new Contract(lakeAddress, ERC20Abi, provider);
-    const totalSupply = await lakeTokenContract.callStatic.totalSupply();
-    const vestingScheduleContractBalance =
-        await lakeTokenContract.callStatic.balanceOf(vestingScheduleAddress, {
-            blockTag,
-        });
-    const uniswapPoolBalance = await lakeTokenContract.callStatic.balanceOf(
-        usdtLakePoolAddress,
-        {
-            blockTag,
-        },
-    );
+    try {
+        const totalSupply = await lakeTokenContract.callStatic.totalSupply();
+        const vestingScheduleContractBalance =
+            await lakeTokenContract.callStatic.balanceOf(
+                vestingScheduleAddress,
+                {
+                    blockTag,
+                },
+            );
+        const uniswapPoolBalance = await lakeTokenContract.callStatic.balanceOf(
+            usdtLakePoolAddress,
+            {
+                blockTag,
+            },
+        );
 
-    return (
-        parseBigNumber(totalSupply, ASSET_LAKE.decimals) -
-        parseBigNumber(vestingScheduleContractBalance, ASSET_LAKE.decimals) -
-        parseBigNumber(uniswapPoolBalance, ASSET_LAKE.decimals)
-    );
+        return (
+            parseBigNumber(totalSupply, ASSET_LAKE.decimals) -
+            parseBigNumber(
+                vestingScheduleContractBalance,
+                ASSET_LAKE.decimals,
+            ) -
+            parseBigNumber(uniswapPoolBalance, ASSET_LAKE.decimals)
+        );
+    } catch (e) {
+        console.error('Failed to get LAKE circulation supply: ', e);
+        return 0;
+    }
 };

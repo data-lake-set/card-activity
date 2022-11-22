@@ -28,7 +28,7 @@ export const useStakedPositions = async (
             });
         }
     } catch (e) {
-        console.error('Failed to get staked positions', e);
+        console.error('Failed to get staked positions: ', e);
     }
     return stakedPositions;
 };
