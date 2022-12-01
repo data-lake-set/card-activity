@@ -5,10 +5,10 @@ export const isPositionActive = (
     tokenB: string,
     liquidity: number,
 ) => {
-    const { usdtAddress, lakeAddress } = useConfig();
+    const { lakeAddress, getPool } = useConfig();
     return (
-        tokenA.toLowerCase() === usdtAddress.toLowerCase() &&
-        tokenB.toLowerCase() === lakeAddress.toLowerCase() &&
+        !!getPool(tokenA, tokenB) &&
+        (tokenA === lakeAddress || tokenB === lakeAddress) &&
         liquidity > 0
     );
 };

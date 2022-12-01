@@ -1,6 +1,6 @@
-import { ASSET_LAKE, ASSET_USDT } from '../constants/assets';
 import { NonfungiblePositionManager, Position } from '@uniswap/v3-sdk';
 
+import { ASSET_LAKE } from '../constants/assets';
 import { IPositionDetails } from '../interfaces/positionDetails.interface';
 import { JsonRpcProvider } from '@ethersproject/providers';
 import { Percent } from '@uniswap/sdk-core';
@@ -9,7 +9,9 @@ import { useUniswapPool } from './use-uniswap-pool';
 
 export const useProvideLiquidity = async (
     provider: JsonRpcProvider,
-    usdtAmount: number,
+    tokenAmount: number,
+    tokenAddress: string,
+    tokenDecimals: number,
     lakeAmount: number,
     slippageTolerance: number,
     transactionDeadline: number,
@@ -19,11 +21,11 @@ export const useProvideLiquidity = async (
     selectedPosition?: IPositionDetails,
 ): Promise<void> => {
     try {
-        const { nonfungiblePositionManagerAddress } = useConfig();
-        const pool = await useUniswapPool(provider);
+        const { lakeAddress, nonfungiblePositionManagerAddress } = useConfig();
+        const pool = await useUniswapPool(provider, tokenAddress, lakeAddress);
         const position = Position.fromAmounts({
             pool,
-            amount0: Math.round(usdtAmount * 10 ** ASSET_USDT.decimals),
+            amount0: Math.round(tokenAmount * 10 ** tokenDecimals),
             amount1: Math.round(lakeAmount * 10 ** ASSET_LAKE.decimals),
             tickLower: selectedPosition
                 ? selectedPosition.tickLower

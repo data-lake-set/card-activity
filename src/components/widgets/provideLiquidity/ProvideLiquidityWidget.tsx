@@ -5,7 +5,7 @@ import { Button } from '../../button/Button';
 import { GradientButton } from '../../button/gradient/GradientButton';
 import { IPositionDetails } from '../../../interfaces/positionDetails.interface';
 import { JsonRpcProvider } from '@ethersproject/providers';
-import { ProvideLiquidityModal } from './liquidity/ProvideLiquidityModal';
+import { ProvideLiquidityModal } from './liquidity/provide/ProvideLiquidityModal';
 import { RemoveLiquidityModal } from './liquidity/RemoveLiquidityModal';
 import { WalletConnectContext } from '../../../context';
 import { formatValue } from '../../../utils/formatValue';
@@ -16,7 +16,7 @@ import { useTokenBalance } from '@usedapp/core';
 
 export const ProvideLiquidityWidget = () => {
     const { account, library } = useContext(WalletConnectContext);
-    const { lakeAddress, usdtAddress } = useConfig();
+    const { lakeAddress } = useConfig();
     const [arePositionsLoading, setArePositionsLoading] = useState(true);
     const [positions, setPositions] = useState<IPositionDetails[]>([]);
     const [isProvideLiquidityModalOpen, setIsProvideLiquidityModalOpen] =
@@ -25,9 +25,7 @@ export const ProvideLiquidityWidget = () => {
         useState(false);
     const [refreshPositions, setRefreshPositions] = useState(0);
     const [lakeBalance, setLakeBalance] = useState(0);
-    const [usdtBalance, setUsdtBalance] = useState(0);
     const lakeBalanceAsBigNumber = useTokenBalance(lakeAddress, account);
-    const usdtBalanceAsBigNumber = useTokenBalance(usdtAddress, account);
 
     useEffect(() => {
         const fetchData = async (account: string, library: JsonRpcProvider) => {
@@ -49,14 +47,6 @@ export const ProvideLiquidityWidget = () => {
         );
     }, [lakeBalanceAsBigNumber]);
 
-    useEffect(() => {
-        setUsdtBalance(
-            usdtBalanceAsBigNumber
-                ? parseBigNumber(usdtBalanceAsBigNumber, ASSET_USDT.decimals)
-                : 0,
-        );
-    }, [usdtBalanceAsBigNumber]);
-
     return (
         <div className="w-full flex flex-col items-center mt-10 mb-4">
             <div className="w-full flex flex-col items-center">
@@ -76,7 +66,6 @@ export const ProvideLiquidityWidget = () => {
                     isLoading={arePositionsLoading}
                     positions={positions}
                     lakeBalance={lakeBalance}
-                    usdtBalance={usdtBalance}
                     closeModal={() => {
                         setIsProvideLiquidityModalOpen(false);
                     }}

@@ -8,6 +8,8 @@ type Props = {
     tickSpacing?: number;
     slippageTolerance: number;
     transactionDeadline: number;
+    tokenAddress?: string;
+    tokenSymbol?: string;
     decreaseTickLower?: () => void;
     increaseTickLower?: () => void;
     decreaseTickUpper?: () => void;
@@ -25,6 +27,8 @@ export const Settings = ({
     tickUpper,
     slippageTolerance,
     transactionDeadline,
+    tokenAddress,
+    tokenSymbol,
     decreaseTickLower,
     increaseTickLower,
     decreaseTickUpper,
@@ -41,6 +45,8 @@ export const Settings = ({
                     tickUpper={tickUpper!}
                     nearestTick={nearestTick!}
                     tickSpacing={tickSpacing!}
+                    tokenAddress={tokenAddress!}
+                    tokenSymbol={tokenSymbol!}
                     decreaseTickLower={decreaseTickLower!}
                     increaseTickLower={increaseTickLower!}
                     decreaseTickUpper={decreaseTickUpper!}

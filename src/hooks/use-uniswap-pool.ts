@@ -2,9 +2,9 @@ import { BigNumber, Contract } from 'ethers';
 
 import { JsonRpcProvider } from '@ethersproject/providers';
 import { Pool } from '@uniswap/v3-sdk';
-import { useLakeToken } from './use-lake-token';
+import { useConfig } from './use-config';
 import { usePoolContract } from './use-pool-contract';
-import { useUsdtToken } from './use-usdt-token';
+import { useToken } from './use-token';
 
 export interface Immutables {
     fee: number;
@@ -19,18 +19,22 @@ interface State {
 
 export const useUniswapPool = async (
     provider: JsonRpcProvider,
+    baseTokenAddress: string,
+    quoteTokenAddress: string,
     blockTag?: number,
 ) => {
-    const poolContract = usePoolContract(provider);
-    const usdt = useUsdtToken();
-    const lake = useLakeToken();
+    const { getPool } = useConfig();
+    const pool = getPool(baseTokenAddress, quoteTokenAddress);
+    const poolContract = usePoolContract(provider, pool!.poolAddress);
+    const baseToken = useToken(baseTokenAddress, pool!.token0.symbol);
+    const quoteToken = useToken(quoteTokenAddress, pool!.token1.symbol);
     const [immutables, state] = await Promise.all([
         getPoolImmutables(poolContract),
         getPoolState(poolContract, blockTag),
     ]);
     return new Pool(
-        usdt,
-        lake,
+        baseToken,
+        quoteToken,
         immutables.fee,
         state.sqrtPriceX96.toString(),
         state.liquidity.toString(),

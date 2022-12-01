@@ -1,5 +1,6 @@
+import { BigNumber, Contract } from 'ethers';
+
 import { ASSET_LAKE } from '../constants/assets';
-import { Contract } from 'ethers';
 import { ERC20Abi } from '../abis/ERC20';
 import { JsonRpcProvider } from '@ethersproject/providers';
 import { parseBigNumber } from '../utils/parseBigNumber';
@@ -9,8 +10,7 @@ export const useLakeCirculationSupply = async (
     provider: JsonRpcProvider,
     blockTag?: number,
 ): Promise<number> => {
-    const { lakeAddress, vestingScheduleAddress, usdtLakePoolAddress } =
-        useConfig();
+    const { lakeAddress, vestingScheduleAddress, pools } = useConfig();
     const lakeTokenContract = new Contract(lakeAddress, ERC20Abi, provider);
     try {
         const totalSupply = await lakeTokenContract.callStatic.totalSupply();
@@ -21,12 +21,15 @@ export const useLakeCirculationSupply = async (
                     blockTag,
                 },
             );
-        const uniswapPoolBalance = await lakeTokenContract.callStatic.balanceOf(
-            usdtLakePoolAddress,
-            {
-                blockTag,
-            },
-        );
+
+        let uniswapPoolBalances = BigNumber.from(0);
+        pools.forEach(async (pool) => {
+            uniswapPoolBalances.add(
+                await lakeTokenContract.callStatic.balanceOf(pool.poolAddress, {
+                    blockTag,
+                }),
+            );
+        });
 
         return (
             parseBigNumber(totalSupply, ASSET_LAKE.decimals) -
@@ -34,7 +37,7 @@ export const useLakeCirculationSupply = async (
                 vestingScheduleContractBalance,
                 ASSET_LAKE.decimals,
             ) -
-            parseBigNumber(uniswapPoolBalance, ASSET_LAKE.decimals)
+            parseBigNumber(uniswapPoolBalances, ASSET_LAKE.decimals)
         );
     } catch (e) {
         console.error('Failed to get LAKE circulation supply: ', e);

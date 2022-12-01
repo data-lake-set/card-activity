@@ -7,6 +7,8 @@ export interface IPositionDetails {
     tickUpper: number;
     lowerPrice: string;
     upperPrice: string;
-    usdtAmount: number;
+    tokenAmount: number;
+    tokenSymbol: string;
+    tokenAddress: string;
     lakeAmount: number;
 }

@@ -222,10 +222,10 @@ export const RemoveLiquidityModal = ({
                                                 )}
                                             </span>
                                             <span className="font-kanit-medium whitespace-nowrap text-xs tracking-[.12em]">
-                                                {ASSET_USDT.symbol}:{' '}
+                                                {selectedPosition!.tokenSymbol}:{' '}
                                                 {formatValue(
                                                     (selectedPosition!
-                                                        .usdtAmount *
+                                                        .tokenAmount *
                                                         inputValue) /
                                                         100,
                                                     '',

@@ -31,17 +31,23 @@ export const Stats = () => {
     const { library } = useContext(WalletConnectContext);
 
     useEffect(() => {
-        const fetchData = async (library: JsonRpcProvider) => {
-            setLakeStats(await useLakeStats(library));
-        };
+        const interval = setInterval(() => {
+            if (library) {
+                fetchData(library).catch(console.error);
+            }
+        }, REFRESH_STATS_INTERVAL);
+        return () => clearInterval(interval);
+    }, []);
 
+    useEffect(() => {
         if (library) {
             fetchData(library).catch(console.error);
-            setInterval(() => {
-                fetchData(library).catch(console.error);
-            }, REFRESH_STATS_INTERVAL);
         }
     }, [library]);
+
+    const fetchData = async (library: JsonRpcProvider) => {
+        setLakeStats(await useLakeStats(library));
+    };
 
     const addToMetamask = async () => {
         try {
