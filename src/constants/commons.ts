@@ -10,3 +10,4 @@ export const BLOCKS_PER_DAY = 5 * 60 * 24;
 export const SUCCESSFUL_TRANSACTION_DELAY = 10000;
 export const FAILED_TRANSACTION_DELAY = 60000;
 export const LOADING_DELAY = 5000;
+export const PDF_LOADING_DELAY = 1000;
