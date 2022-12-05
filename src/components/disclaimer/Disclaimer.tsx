@@ -54,9 +54,8 @@ export const Disclaimer = ({ onAcceptClick }: Props) => {
                             <button
                                 className="hover:scale-105 cursor-pointer transition-transform duration-300 cursor-pointer"
                                 onClick={() =>
-                                    window.location.replace(
-                                        'https://data-lake.co/',
-                                    )
+                                    (window.location.href =
+                                        'https://data-lake.co/')
                                 }
                             >
                                 <GradientBorder className="p-px flex justify-center items-center rounded-[32px]">
