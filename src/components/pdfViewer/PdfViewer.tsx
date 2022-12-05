@@ -1,24 +1,27 @@
 import { Document, Page } from 'react-pdf/dist/esm/entry.webpack';
 
-import { Loading } from '../components/loading/Loading';
-import { PDF_LOADING_DELAY } from '../constants/commons';
-import terms from './../assets/documents/Data_Lake_Regulamin.pdf';
+import { Loading } from '../loading/Loading';
+import { PDF_LOADING_DELAY } from '../../constants/commons';
 import { useState } from 'react';
 
-export const TermsAndConditions = () => {
+type Props = {
+    file: string;
+};
+
+export const PdfViewer = ({ file }: Props) => {
     const [numPages, setNumPages] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
-    function onDocumentLoadSuccess({ numPages }: any) {
+    const onDocumentLoadSuccess = ({ numPages }: any) => {
         setNumPages(numPages);
         setTimeout(() => {
             setIsLoading(false);
         }, PDF_LOADING_DELAY);
-    }
+    };
     return (
         <>
             {isLoading && <Loading />}
-            <Document file={terms} onLoadSuccess={onDocumentLoadSuccess}>
+            <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
                 {Array.from(new Array(numPages), (el, index) => (
                     <Page
                         key={`page_${index + 1}`}
