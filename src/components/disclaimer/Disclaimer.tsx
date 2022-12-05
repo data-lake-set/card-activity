@@ -1,8 +1,11 @@
 import { Button } from '../button/Button';
+import { EnglishDisclaimer } from './EnglishDisclaimer';
 import { GradientBorder } from '../GradientBorder';
 import { GradientButton } from '../button/gradient/GradientButton';
-import { Link } from 'react-router-dom';
+import { PolishDisclaimer } from './PolishDisclaimer';
+import ToggleButton from 'react-toggle-button';
 import cancelIcon from '../../assets/icons/cancel-icon.svg';
+import { colors } from '../../constants/colors';
 import mainPage from '../../assets/icons/main-page.png';
 import styled from 'styled-components';
 import { useState } from 'react';
@@ -12,6 +15,7 @@ type Props = {
 };
 
 export const Disclaimer = ({ onAcceptClick }: Props) => {
+    const [isEnglish, setIsEnglish] = useState(true);
     const [firstCheckbox, setFirstCheckbox] = useState(false);
     const [secondCheckbox, setSecondCheckbox] = useState(false);
     const [thirdCheckbox, setThirdCheckbox] = useState(false);
@@ -21,12 +25,34 @@ export const Disclaimer = ({ onAcceptClick }: Props) => {
             <div className="w-full h-full z-40 fixed flex items-center justify-center">
                 <div className="w-[30rem] h-[25rem] flex justify-between p-8 bg-black-800 rounded-[20px] inset-shadow overflow-auto">
                     <div className="w-full flex flex-col items-center justify-between">
-                        <div className="w-full flex relative items-center justify-center">
-                            <span className="text-3xl color-gray-gradient text-center mt-2 mb-4 tracking-[.1em] font-medium font-kanit-medium cursor-default">
+                        <div className="w-full flex items-center justify-between">
+                            <ToggleButton
+                                inactiveLabel="PL"
+                                activeLabel="ENG"
+                                value={isEnglish}
+                                onToggle={() => {
+                                    setIsEnglish(!isEnglish);
+                                }}
+                                colors={{
+                                    activeThumb: {
+                                        base: colors.purple[600],
+                                    },
+                                    inactiveThumb: {
+                                        base: colors.purple[600],
+                                    },
+                                    active: {
+                                        base: colors.black[500],
+                                    },
+                                    inactive: {
+                                        base: colors.black[500],
+                                    },
+                                }}
+                            />
+                            <span className="text-3xl color-gray-gradient text-center my-2 tracking-[.1em] font-medium font-kanit-medium cursor-default">
                                 DISCLAIMER
                             </span>
                             <button
-                                className="hover:scale-105 cursor-pointer transition-transform duration-300 absolute cursor-pointer right-0 top-2"
+                                className="hover:scale-105 cursor-pointer transition-transform duration-300 cursor-pointer"
                                 onClick={() =>
                                     window.location.replace(
                                         'https://data-lake.co/',
@@ -44,70 +70,37 @@ export const Disclaimer = ({ onAcceptClick }: Props) => {
                                 </GradientBorder>
                             </button>
                         </div>
-                        <div className="flex flex-col overflow-auto">
-                            <label>
-                                <input
-                                    className="mr-3"
-                                    type="checkbox"
-                                    checked={firstCheckbox}
-                                    onChange={() =>
-                                        setFirstCheckbox(!firstCheckbox)
-                                    }
-                                />
-                                I accept the{' '}
-                                <Link
-                                    className="font-medium font-kanit-medium"
-                                    to="/terms-and-conditions"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    Terms & Conditions
-                                </Link>{' '}
-                                and{' '}
-                                <Link
-                                    className="font-medium font-kanit-medium"
-                                    to="/privacy-policy"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    Privacy Policy
-                                </Link>
-                                .
-                            </label>
-                            <label>
-                                <input
-                                    className="mr-3"
-                                    type="checkbox"
-                                    checked={secondCheckbox}
-                                    onChange={() =>
-                                        setSecondCheckbox(!secondCheckbox)
-                                    }
-                                />
-                                I have familiarised myself with{' '}
-                                <Link
-                                    className="font-medium font-kanit-medium"
-                                    to="/terms-and-conditions"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                >
-                                    INFORMATION ABOUT THE RISKS ASSOCIATED WITH
-                                    THE PROVISION OF SERVICES
-                                </Link>{' '}
-                                and I accept the risks indicated therein.
-                            </label>
-                            <label>
-                                <input
-                                    className="mr-3"
-                                    type="checkbox"
-                                    checked={thirdCheckbox}
-                                    onChange={() =>
-                                        setThirdCheckbox(!thirdCheckbox)
-                                    }
-                                />
-                                I consent to the commencement of services before
-                                the end of the withdrawal period.
-                            </label>
-                        </div>
+                        {isEnglish ? (
+                            <EnglishDisclaimer
+                                firstCheckbox={firstCheckbox}
+                                secondCheckbox={secondCheckbox}
+                                thirdCheckbox={thirdCheckbox}
+                                setFirstCheckbox={(val) =>
+                                    setFirstCheckbox(val)
+                                }
+                                setSecondCheckbox={(val) =>
+                                    setSecondCheckbox(val)
+                                }
+                                setThirdCheckbox={(val) =>
+                                    setThirdCheckbox(val)
+                                }
+                            />
+                        ) : (
+                            <PolishDisclaimer
+                                firstCheckbox={firstCheckbox}
+                                secondCheckbox={secondCheckbox}
+                                thirdCheckbox={thirdCheckbox}
+                                setFirstCheckbox={(val) =>
+                                    setFirstCheckbox(val)
+                                }
+                                setSecondCheckbox={(val) =>
+                                    setSecondCheckbox(val)
+                                }
+                                setThirdCheckbox={(val) =>
+                                    setThirdCheckbox(val)
+                                }
+                            />
+                        )}
                         <div className="pt-6">
                             {firstCheckbox &&
                             secondCheckbox &&

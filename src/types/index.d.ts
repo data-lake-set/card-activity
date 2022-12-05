@@ -4,3 +4,5 @@ declare module '@walletconnect/web3-provider/dist/umd/index.min.js' {
 }
 
 declare module '*.pdf';
+
+declare module 'react-toggle-button';
