@@ -33,11 +33,15 @@ const getPools = (): IPool[] => {
                     `REACT_APP_${token0Symbol}_${token1Symbol}_POOL_ADDRESS`
                 ] || '',
             token0: {
-                address: process.env[`REACT_APP_${token0Symbol}_ADDRESS`] || '',
+                address:
+                    process.env[`REACT_APP_${token0Symbol}_ADDRESS`] ||
+                    (token0Symbol === 'USDT' ? USDT_ADDRESS : WETH_ADDRESS),
                 symbol: token0Symbol,
             },
             token1: {
-                address: process.env[`REACT_APP_${token1Symbol}_ADDRESS`] || '',
+                address:
+                    process.env[`REACT_APP_${token1Symbol}_ADDRESS`] ||
+                    (token1Symbol === 'ETH' ? WETH_ADDRESS : LAKE_ADDRESS),
                 symbol: token1Symbol,
             },
         };
