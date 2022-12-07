@@ -14,5 +14,5 @@ export const useTokenUsdtPrice = async (
         tokenAddress,
         blockTag,
     );
-    return Number(pool.token1Price.toSignificant());
+    return Number(pool.token0Price.toSignificant());
 };
