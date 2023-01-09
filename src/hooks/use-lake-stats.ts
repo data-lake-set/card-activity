@@ -2,21 +2,19 @@ import { BLOCKS_PER_DAY } from '../constants/commons';
 import { JsonRpcProvider } from '@ethersproject/providers';
 import { useConfig } from './use-config';
 import { useLakeCirculationSupply } from './use-lake-circulation-supply';
-import { useLakeUsdtPrice } from './use-lake-usdt-price';
+import { useLakePrice } from './use-lake-price';
 
 export const useLakeStats = async (provider: JsonRpcProvider) => {
     const { poolDeploymentBlockNumber } = useConfig();
     const pastBlock = (await provider.getBlockNumber()) - BLOCKS_PER_DAY;
-    const lakePrice = await useLakeUsdtPrice(provider);
-    const pastLakePrice = await useLakeUsdtPrice(
-        provider,
+    const lakePrice = await useLakePrice();
+    const pastLakePrice = await useLakePrice(
         pastBlock < poolDeploymentBlockNumber
             ? poolDeploymentBlockNumber
             : pastBlock,
     );
-    const circulationSupply = await useLakeCirculationSupply(provider);
+    const circulationSupply = await useLakeCirculationSupply();
     const pastCirculationSupply = await useLakeCirculationSupply(
-        provider,
         pastBlock < poolDeploymentBlockNumber
             ? poolDeploymentBlockNumber
             : pastBlock,

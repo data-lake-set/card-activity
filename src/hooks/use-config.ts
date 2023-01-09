@@ -88,6 +88,7 @@ export const useConfig = () => {
         swapConvenienceFeeRecipient:
             process.env.REACT_APP_SWAP_CONVENIENCE_FEE_RECIPIENT || '',
         pools,
+        lakeApiUrl: process.env.REACT_APP_LAKE_API_URL || '',
         getPool,
         getDappConfig,
     };

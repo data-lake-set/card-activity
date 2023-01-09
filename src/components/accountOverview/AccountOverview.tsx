@@ -16,7 +16,7 @@ import lockOpenIcon from '../../assets/icons/lock-open-icon.svg';
 import { parseBigNumber } from '../../utils/parseBigNumber';
 import { useBeneficiaryOverview } from '../../hooks/use-beneficiary-overview';
 import { useConfig } from '../../hooks/use-config';
-import { useLakeUsdtPrice } from '../../hooks/use-lake-usdt-price';
+import { useLakePrice } from '../../hooks/use-lake-price';
 import { usePositions } from '../../hooks/use-positions';
 import { useTgeTimestamp } from '../../hooks/use-tge-timestamp';
 import { useTokenBalance } from '@usedapp/core';
@@ -36,19 +36,12 @@ export const AccountOverview = () => {
     const lakeBalanceAsBigNumber = useTokenBalance(lakeAddress, account);
 
     useEffect(() => {
+        updatePrice().catch(console.error);
         const interval = setInterval(() => {
-            if (library) {
-                updatePrice(library).catch(console.error);
-            }
+            updatePrice().catch(console.error);
         }, REFRESH_LAKE_PRICE_INTERVAL);
         return () => clearInterval(interval);
     }, []);
-
-    useEffect(() => {
-        if (library) {
-            updatePrice(library).catch(console.error);
-        }
-    }, [library]);
 
     useEffect(() => {
         setLakeBalance(
@@ -103,8 +96,8 @@ export const AccountOverview = () => {
         setTotalAllocated(allocated);
     }, [vestingSchedules]);
 
-    const updatePrice = async (library: JsonRpcProvider) => {
-        setLakePrice(await useLakeUsdtPrice(library));
+    const updatePrice = async () => {
+        setLakePrice(await useLakePrice());
     };
 
     return (

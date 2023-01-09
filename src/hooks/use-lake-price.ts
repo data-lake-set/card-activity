@@ -1,20 +1,18 @@
 import axios from 'axios';
 import { useConfig } from './use-config';
 
-export const useLakeCirculationSupply = async (
-    blockTag?: number,
-): Promise<number> => {
+export const useLakePrice = async (blockTag?: number): Promise<number> => {
     try {
         const { lakeApiUrl } = useConfig();
         const instance = axios.create({
             baseURL: lakeApiUrl,
         });
         const resp = await instance.get(
-            `/supply/circulation/${blockTag ? blockTag : ''}`,
+            `/price/lake/${blockTag ? blockTag : ''}`,
         );
-        return resp.data.circulationSupply;
+        return resp.data.lakePrice;
     } catch (e) {
-        console.error('Failed to get LAKE circulation supply: ', e);
+        console.error('Failed to get LAKE price: ', e);
         return 0;
     }
 };

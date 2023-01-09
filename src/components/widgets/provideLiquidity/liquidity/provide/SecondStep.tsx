@@ -21,7 +21,6 @@ import { GradientButton } from '../../../../button/gradient/GradientButton';
 import { GradientButtonWithSpinner } from '../../../../button/gradient/GradientButtonWithSpinner';
 import { IPool } from '../../../../../interfaces/pool.interface';
 import { IPositionDetails } from '../../../../../interfaces/positionDetails.interface';
-import { JsonRpcProvider } from '@ethersproject/providers';
 import { Settings } from '../Settings';
 import { TokenInput } from '../../TokenInput';
 import { WalletConnectContext } from '../../../../../context';
@@ -30,10 +29,10 @@ import { parseBigNumber } from '../../../../../utils/parseBigNumber';
 import { parseUnits } from 'ethers/lib/utils';
 import settingsIcon from './../../../../../assets/icons/settings-icon.svg';
 import { useConfig } from '../../../../../hooks/use-config';
-import { useLakeUsdtPrice } from '../../../../../hooks/use-lake-usdt-price';
+import { useLakePrice } from '../../../../../hooks/use-lake-price';
 import { usePoolContract } from '../../../../../hooks/use-pool-contract';
 import { useProvideLiquidity } from '../../../../../hooks/use-provide-liquidity';
-import { useTokenUsdtPrice } from '../../../../../hooks/use-token-usdt-price';
+import { useWethPrice } from '../../../../../hooks/use-weth-price';
 
 type Props = {
     pool: IPool;
@@ -95,19 +94,21 @@ export const SecondStep = ({
     );
 
     useEffect(() => {
-        const fetchData = async (library: JsonRpcProvider) => {
+        const getTokenPrice = async () => {
             if (
                 !!selectedPosition &&
                 selectedPosition.tokenAddress === usdtAddress
             ) {
                 setTokenPrice(1);
             } else {
-                setTokenPrice(await useTokenUsdtPrice(library, tokenAddress));
+                setTokenPrice(await useWethPrice());
             }
         };
-        if (library) {
-            fetchData(library).catch(console.error);
-        }
+        const getLakePrice = async () => {
+            setLakePrice(await useLakePrice());
+        };
+        getTokenPrice().catch(console.error);
+        getLakePrice().catch(console.error);
     }, []);
 
     useEffect(() => {
@@ -142,15 +143,6 @@ export const SecondStep = ({
             ASSETS.find((el) => el.symbol === pool.token0.symbol)!.decimals,
         );
     }, [tokenAddress]);
-
-    useEffect(() => {
-        const fetchData = async (library: JsonRpcProvider) => {
-            setLakePrice(await useLakeUsdtPrice(library));
-        };
-        if (library) {
-            fetchData(library).catch(console.error);
-        }
-    }, [library]);
 
     useEffect(() => {
         setIsTokenApproved(
