@@ -1,6 +1,6 @@
-import { IVestingSchedule } from '../../../interfaces/vestingSchedule.interface';
-import { TabProgressBar } from '../../progressBar/TabProgressBar';
-import { formatValue } from '../../../utils/formatValue';
+import { IVestingSchedule } from '../../../../interfaces/vestingSchedule.interface';
+import { TabProgressBar } from '../../../progressBar/TabProgressBar';
+import { formatValue } from '../../../../utils/formatValue';
 
 interface Props {
     vestingSchedule: IVestingSchedule;

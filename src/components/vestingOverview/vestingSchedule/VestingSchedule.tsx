@@ -2,7 +2,7 @@ import { ClipLoader } from 'react-spinners';
 import { ConnectWallet } from '../../connectWallet/ConnectWallet';
 import { IVestingSchedule } from '../../../interfaces/vestingSchedule.interface';
 import { ScheduleTab } from './ScheduleTab';
-import { SchedulesList } from './SchedulesList';
+import { SchedulesList } from './SchedulesList/SchedulesList';
 import { WalletConnectContext } from '../../../context';
 import { colors } from '../../../constants/colors';
 import { useContext } from 'react';
