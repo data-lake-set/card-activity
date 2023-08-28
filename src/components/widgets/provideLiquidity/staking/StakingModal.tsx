@@ -11,7 +11,7 @@ import { customModalStyle } from '../../../../constants/modal';
 import { useStake } from '../../../../hooks/use-stake';
 import { useConfig } from '../../../../hooks/use-config';
 import { useStakerContract } from '../../../../hooks/use-staker-contract';
-import { Contract } from 'ethers';
+import { BigNumber, Contract } from 'ethers';
 import { END_TIME, START_TIME } from '../../../../constants/mainnet';
 import { parseBigNumber } from '../../../../utils/parseBigNumber';
 import { ASSET_LAKE } from '../../../../constants/assets';
@@ -19,6 +19,8 @@ import { formatValue } from '../../../../utils/formatValue';
 import { useUnstake } from '../../../../hooks/use-unstake';
 import { GradientButton } from '../../../button/gradient/GradientButton';
 import { useRewards } from '../../../../hooks/use-rewards';
+import { useClaimRewards } from '../../../../hooks/use-claim-rewards';
+import { ButtonWithSpinner } from '../../../button/ButtonWithSpinner';
 
 type Props = {
     isOpen: boolean;
@@ -43,9 +45,10 @@ export const StakingModal = ({
     const { account, library } = useContext(WalletConnectContext);
     const [isStaking, setIsStaking] = useState(false);
     const [isUnstaking, setIsUnstaking] = useState(false);
+    const [isClaiming, setIsClaiming] = useState(false);
     const [areRewardsLoading, setAreRewardsLoading] = useState(false);
     const [pendingReward, setPendingReward] = useState(0);
-    const [rewards, setRewards] = useState(0);
+    const [rewards, setRewards] = useState<BigNumber>(BigNumber.from(0));
 
     useEffect(() => {
         const fetchData = async (account: string, library: JsonRpcProvider) => {
@@ -120,8 +123,13 @@ export const StakingModal = ({
         closeModal();
     };
 
-    const onClaimClick = () => {
-        console.log('claim');
+    const onClaimClick = async () => {
+        if (library && account) {
+            setIsClaiming(true);
+            await useClaimRewards(library, account, rewards);
+            setIsClaiming(false);
+            refreshPositions();
+        }
     };
 
     return (
@@ -216,7 +224,7 @@ export const StakingModal = ({
                                             </div>
                                             <span className="font-kanit-medium color-gray-gradient text-shadow text-l tracking-[.1em] my-2">
                                                 {formatValue(
-                                                    rewards,
+                                                    parseBigNumber(rewards),
                                                     ASSET_LAKE.symbol,
                                                     2,
                                                 )}{' '}
@@ -224,14 +232,24 @@ export const StakingModal = ({
                                         </div>
                                     </div>
                                     <div className="w-full flex flex-col items-center mt-8">
-                                        <GradientButton
-                                            size="medium"
-                                            disabled={rewards === 0}
-                                            text="CLAIM REWARDS"
-                                            onClick={() => {
-                                                onClaimClick();
-                                            }}
-                                        />
+                                        {isClaiming ? (
+                                            <ButtonWithSpinner
+                                                size="medium"
+                                                disabled={true}
+                                            />
+                                        ) : (
+                                            <GradientButton
+                                                size="medium"
+                                                disabled={
+                                                    parseBigNumber(rewards) ===
+                                                    0
+                                                }
+                                                text="CLAIM REWARDS"
+                                                onClick={() => {
+                                                    onClaimClick();
+                                                }}
+                                            />
+                                        )}
                                     </div>
                                 </>
                             ) : (
