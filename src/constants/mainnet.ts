@@ -8,4 +8,5 @@ export const UNISWAP_V3_STAKER_ADDRESSES =
     '0xe34139463bA50bD61336E0c446Bd8C0867c6fE65';
 export const START_TIME = 1692223200;
 export const INIT_TIME = 0;
+export const SEMI_TIME = 1000;
 export const END_TIME = 1693346400;
