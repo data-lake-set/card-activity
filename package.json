@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "description": "Data Lake Token App",
   "scripts": {
-    "start": "node ps.config.js | react-app-rewired start",
+    "start": "react-app-rewired start",
     "build": "GENERATE_SOURCEMAP=false react-app-rewired build",
     "test": "jest --setupFiles dotenv/config"
   },
